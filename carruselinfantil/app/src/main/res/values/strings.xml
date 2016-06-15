@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">carruselinfantil</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Configuracion</string>
+
+    <string name="opcion_drawer_mis_carruseles">Mis Carruseles</string>
+    <string name="opcion_drawer_admin_carruseles">Administrar Carruseles</string>
+    <string name="opcion_drawer_configurar_app">Configurar Aplicacion</string>
+
+    <string name="contentDescriptionImagenSet">Aqui es donde aparecerá la imagen que elijas</string>
+</resources>
