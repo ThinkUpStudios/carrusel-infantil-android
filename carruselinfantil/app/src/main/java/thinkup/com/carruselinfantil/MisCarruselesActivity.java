@@ -27,10 +27,15 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
 
     private Timer timer = null;
 
+    TextView misCarruseles;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gallery = (List<Uri>) getIntent().getSerializableExtra("CARRUSEL_SELECCIONADO");
+
+        misCarruseles = (TextView) findViewById(R.id.textoMisCarruseles);
+
 
         //PARA EL CARRUSEL
         imageSwitcher = (ImageSwitcher) findViewById(R.id.carrusel_seleccionado);
@@ -41,8 +46,7 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             }
         });
 
-        // Set animations
-        // https://danielme.com/2013/08/18/diseno-android-transiciones-entre-activities/
+
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
         imageSwitcher.setInAnimation(fadeIn);
@@ -53,19 +57,23 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
         return R.layout.mis_carruseles_drawer;
     }
 
-    //PARA CARRUSEL
-    // ////////////////////BUTTONS
+
     /**
      * starts or restarts the slider
      *
      * @param button
      */
     public void start(View button) {
-        if (timer != null) {
-            timer.cancel();
+        if(gallery!=null) {
+            if (timer != null) {
+                timer.cancel();
+            }
+            position = 0;
+            startSlider();
         }
-        position = 0;
-        startSlider();
+        else {
+            misCarruseles.setText("Aún no ha seleccionado un carrusel.");
+        }
     }
 
     public void stop(View button) {
