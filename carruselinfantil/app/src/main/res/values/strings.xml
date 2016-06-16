@@ -11,4 +11,8 @@
     <string name="opcion_drawer_configurar_app">Configurar Aplicacion</string>
 
     <string name="contentDescriptionImagenSet">Aqui es donde aparecerá la imagen que elijas</string>
+    <string name="iniciar">Iniciar</string>
+    <string name="terminar">Terminar</string>
+    <string name="guardar">GUARDAR</string>
+
 </resources>
