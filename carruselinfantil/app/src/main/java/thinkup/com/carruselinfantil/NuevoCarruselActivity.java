@@ -53,8 +53,6 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     private Button mOptionButton;
     private RelativeLayout mRlView;
 
-    private Button guardarButton;
-
     private String mPath;
 
     //PARA EL CARRUSEL
@@ -89,17 +87,6 @@ public class NuevoCarruselActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showOptions();
-            }
-        });
-
-        //mSetImage = (ImageView) findViewById(R.id.set_picture);
-        guardarButton = (Button) findViewById(R.id.buttonguardar);
-        guardarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(NuevoCarruselActivity.this, MisCarruselesActivity.class);
-                i.putExtra("CARRUSEL_SELECCIONADO", (Serializable) gallery);
-                startActivity(i);
             }
         });
 
@@ -296,6 +283,13 @@ public class NuevoCarruselActivity extends AppCompatActivity {
             timer.cancel();
             timer = null;
         }
+    }
+
+
+    public void guardar(View button) {
+        Intent i = new Intent(NuevoCarruselActivity.this, MisCarruselesActivity.class);
+        i.putExtra("CARRUSEL_SELECCIONADO", (Serializable) gallery);
+        startActivity(i);
     }
 
     public void startSlider() {
