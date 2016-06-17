@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -63,6 +64,18 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
                 startActivity(i);
             }
         });
+
+        ImageView carrusel = (ImageView) findViewById(R.id.un_carrusel);
+        if(gallery != null)
+            carrusel.setImageURI(gallery.get(0));
+        carrusel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MisCarruselesActivity.this, PresentacionActivity.class);
+                i.putExtra("CARRUSEL_SELECCIONADO", (Serializable) gallery);
+                startActivity(i);
+            }
+        });
     }
 
     public int getContentView(){
@@ -94,6 +107,7 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             timer = null;
         }
     }
+
 
     public void startSlider() {
         timer = new Timer();
