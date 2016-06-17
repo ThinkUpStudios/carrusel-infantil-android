@@ -14,5 +14,6 @@
     <string name="iniciar">Iniciar</string>
     <string name="terminar">Terminar</string>
     <string name="guardar">GUARDAR</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

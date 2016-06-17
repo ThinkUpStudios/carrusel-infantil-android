@@ -59,12 +59,7 @@ public abstract class DrawerAbstractActivity extends AppCompatActivity
                 i.putExtra("TEXTO_LABEL", "Desde drawer mis carruseles");
                 startActivity(i);
             }
-        } else if (id == R.id.nav_administrar) {
-            if(this.getContentView() != R.layout.administrar_carruseles_drawer) {
-                Intent i = new Intent(this, AdministrarCarruselesActivity.class);
-                i.putExtra("TEXTO_LABEL", "Desde drawer Administrar");
-                startActivity(i);
-            }
+
         } else if (id == R.id.nav_configurar) {
 
         } else if (id == R.id.nav_share) {

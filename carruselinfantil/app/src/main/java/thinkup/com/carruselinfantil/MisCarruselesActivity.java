@@ -1,7 +1,10 @@
 package thinkup.com.carruselinfantil;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -51,6 +54,15 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
         Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
         imageSwitcher.setInAnimation(fadeIn);
         imageSwitcher.setOutAnimation(fadeOut);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nuevo_carrusel);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MisCarruselesActivity.this, NuevoCarruselActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     public int getContentView(){
