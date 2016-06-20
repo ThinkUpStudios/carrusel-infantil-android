@@ -71,7 +71,7 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
         carrusel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MisCarruselesActivity.this, PresentacionActivity.class);
+                Intent i = new Intent(MisCarruselesActivity.this, Presentacion.class);
                 i.putExtra("CARRUSEL_SELECCIONADO", (Serializable) gallery);
                 startActivity(i);
             }

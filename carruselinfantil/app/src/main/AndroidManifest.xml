@@ -29,11 +29,7 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".PresentacionActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_presentacion"
-            android:theme="@style/FullscreenTheme"></activity>
+        <activity android:name=".Presentacion"></activity>
     </application>
 
 </manifest>
