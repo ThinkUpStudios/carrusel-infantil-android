@@ -23,7 +23,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -59,6 +63,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     private ImageSwitcher imageSwitcher;
 
     private List<Uri> gallery;
+    private ImageAdapter adapter;
 
     private int position;
 
@@ -90,22 +95,29 @@ public class NuevoCarruselActivity extends AppCompatActivity {
             }
         });
 
-        //PARA EL CARRUSEL
-        imageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher);
-        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+        /*
+        Seteando el adaptador al GridView
+         */
+        GridView gridview = (GridView) findViewById(R.id.gridview_imagenes);
+        this.adapter = new ImageAdapter(this, this.gallery)
+;
+        gridview.setAdapter(adapter);
 
-            public View makeView() {
-                return new ImageView(NuevoCarruselActivity.this);
+        /*
+        Creando una nueva escucha para los elementos del Grid
+         */
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                /*
+                Iniciar una nueva actividad al presionar la foto
+                 */
+                Intent i = new Intent(NuevoCarruselActivity.this,Details.class);
+                i.putExtra("position",position);//Posición del elemento
+                i.putExtra("CARRUSEL_SELECCIONADO", (Serializable) gallery);
+                startActivity(i);
+
             }
         });
-
-        // Set animations
-        // https://danielme.com/2013/08/18/diseno-android-transiciones-entre-activities/
-        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-        imageSwitcher.setInAnimation(fadeIn);
-        imageSwitcher.setOutAnimation(fadeOut);
-
     }
 
     private boolean mayRequestStoragePermission() {
@@ -213,10 +225,14 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                     //mSetImage.setImageBitmap(bitmap);
 
                     this.gallery.add(Uri.parse(mPath));
+                    this.adapter.notifyDataSetChanged();
+                    //this.adapter.addImage(Uri.parse(mPath));
                     break;
                 case SELECT_PICTURE:
                     Uri path = data.getData();
                     this.gallery.add(data.getData());
+                    this.adapter.notifyDataSetChanged();
+                    //this.adapter.addImage(data.getData());
                     //mSetImage.setImageURI(path);
                     break;
 
@@ -263,27 +279,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
         builder.show();
     }
 
-    //PARA CARRUSEL
-    // ////////////////////BUTTONS
-    /**
-     * starts or restarts the slider
-     *
-     * @param button
-     */
-    public void start(View button) {
-        if (timer != null) {
-            timer.cancel();
-        }
-        position = 0;
-        startSlider();
-    }
 
-    public void stop(View button) {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
 
 
     public void guardar(View button) {
@@ -292,42 +288,4 @@ public class NuevoCarruselActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void startSlider() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-
-            public void run() {
-                // avoid exception:
-                // "Only the original thread that created a view hierarchy can touch its views"
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        imageSwitcher.setImageURI(gallery.get(position));
-                        position++;
-                        if (position == gallery.size()) {
-                            position = 0;
-                        }
-                    }
-                });
-            }
-
-        }, 0, DURATION);
-    }
-
-    // Stops the slider when the Activity is going into the background
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (timer != null) {
-            timer.cancel();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (timer != null) {
-            startSlider();
-        }
-
-    }
 }

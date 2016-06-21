@@ -21,8 +21,6 @@ import java.util.TimerTask;
 
 public class Presentacion extends Activity {
 
-    private static final int INSERT_ID = Menu.FIRST;
-
     //PARA EL CARRUSEL
     private ImageSwitcher imageSwitcher;
 
@@ -102,27 +100,4 @@ public class Presentacion extends Activity {
 
 
 
-    //Metodos para que la pantalla sea fullScreen
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(0, INSERT_ID, 0,"FullScreen");
-
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch(item.getItemId()) {
-            case INSERT_ID:
-                createNote();
-        }
-        return true;
-    }
-
-    private void createNote() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
 }
