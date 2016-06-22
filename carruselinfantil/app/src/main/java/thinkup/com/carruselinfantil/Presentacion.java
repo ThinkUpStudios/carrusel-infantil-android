@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -43,7 +44,14 @@ public class Presentacion extends Activity {
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
-                return new ImageView(Presentacion.this);
+                ImageView imageView = new ImageView(Presentacion.this);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+                ViewGroup.LayoutParams params = new ImageSwitcher.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                imageView.setLayoutParams(params);
+                return imageView;
             }
         });
 

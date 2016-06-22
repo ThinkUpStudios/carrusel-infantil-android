@@ -2,6 +2,7 @@ package thinkup.com.carruselinfantil;
 
 
 import android.annotation.TargetApi;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -155,9 +156,10 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                 if(option[which] == "Tomar foto"){
                     openCamera();
                 }else if(option[which] == "Elegir de galeria"){
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(intent.createChooser(intent, "Selecciona app de imagen"), SELECT_PICTURE);
+                    Intent chooseIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    chooseIntent.setType("image/*");
+                    chooseIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    startActivityForResult(chooseIntent.createChooser(chooseIntent, "Selecciona app de imagen"), SELECT_PICTURE);
                 }else {
                     dialog.dismiss();
                 }
@@ -229,8 +231,14 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                     //this.adapter.addImage(Uri.parse(mPath));
                     break;
                 case SELECT_PICTURE:
-                    Uri path = data.getData();
-                    this.gallery.add(data.getData());
+                    ClipData clipData = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        clipData = data.getClipData();
+                        for (int i = 0; i < clipData.getItemCount(); i++)
+                        {
+                            this.gallery.add(clipData.getItemAt(i).getUri());
+                        }
+                    }
                     this.adapter.notifyDataSetChanged();
                     //this.adapter.addImage(data.getData());
                     //mSetImage.setImageURI(path);
