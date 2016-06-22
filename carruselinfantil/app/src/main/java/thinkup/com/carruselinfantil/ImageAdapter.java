@@ -17,7 +17,7 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<Uri> gallery;
 
-    
+
     public ImageAdapter(Context c, List<Uri> gallery) {
         mContext = c;
         this.gallery = gallery;
