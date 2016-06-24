@@ -1,4 +1,27 @@
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/originalImage" />
+    tools:context="thinkup.com.carruselinfantil.Details">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/grabando" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="150px"
+        android:id="@+id/reproducion"
+        android:onClick="reproducir" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/originalImage"
+        android:longClickable="false"
+        android:layout_below="@id/reproducion"
+        android:onClick="accionarAudio" />
+
+</RelativeLayout>
