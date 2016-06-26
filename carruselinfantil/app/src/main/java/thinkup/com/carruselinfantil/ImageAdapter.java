@@ -8,32 +8,25 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import thinkup.com.carruselinfantil.modelo.Carrusel;
+import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
 
 
 public class ImageAdapter extends BaseAdapter {
     // Contexto de la aplicación
     private Context mContext;
-    private List<Uri> gallery;
+    Carrusel gallery;
 
 
-    public ImageAdapter(Context c, List<Uri> gallery) {
+    public ImageAdapter(Context c, Carrusel galeria) {
         mContext = c;
-        this.gallery = gallery;
-
-    }
-
-    public void setGalery(List<Uri> gallery){
-        this.gallery = gallery;
-    }
-
-    public void addImage(Uri uri){
-        this.gallery.add(uri);
+        this.gallery = galeria;
     }
 
     public int getCount() {
-        return this.gallery.size();
+        return this.gallery.getGaleria().size();
     }
 
     public Object getItem(int position) {
@@ -45,7 +38,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public Uri getThumbId(int position){
-        return this.gallery.get(position);
+        return this.gallery.getGaleria().get(position).getUri();
     }
 
 
@@ -66,7 +59,7 @@ public class ImageAdapter extends BaseAdapter {
         }
 
         //Setear la imagen desde el recurso drawable
-        imageView.setImageURI(this.gallery.get(position));
+        imageView.setImageURI(this.getThumbId(position));
         return imageView;
     }
 

@@ -22,7 +22,6 @@
     </android.support.design.widget.AppBarLayout>
 
 
-
     <LinearLayout
         android:id="@+id/pantalla"
         android:layout_width="match_parent"
@@ -50,33 +49,6 @@
             android:onClick=""
             />
 
-        <ImageSwitcher
-            android:id="@+id/carrusel_seleccionado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ImageSwitcher>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:layout_centerHorizontal="true">
-
-            <Button
-                android:id="@+id/button_inicio_carrusel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="start"
-                android:text="@string/iniciar" />
-
-            <Button
-                android:id="@+id/button_terminar_carrusel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="stop"
-                android:text="@string/terminar" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -86,8 +58,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_input_add" />
-
-
-
 
 </android.support.design.widget.CoordinatorLayout>

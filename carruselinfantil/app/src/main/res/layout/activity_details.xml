@@ -6,22 +6,34 @@
     android:layout_height="match_parent"
     tools:context="thinkup.com.carruselinfantil.Details">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/grabando" />
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/lopciones"
         android:layout_height="150px"
-        android:id="@+id/reproducion"
-        android:onClick="reproducir" />
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/audio_español"
+            android:onClick="accionarAudio"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reproducion"
+            android:onClick="reproducir"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/originalImage"
         android:longClickable="false"
-        android:layout_below="@id/reproducion"
-        android:onClick="accionarAudio" />
+        android:layout_below="@id/lopciones"/>
 
 </RelativeLayout>

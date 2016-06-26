@@ -1,31 +1,24 @@
 package thinkup.com.carruselinfantil;
 
 import android.app.Activity;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import thinkup.com.carruselinfantil.modelo.Carrusel;
 
 public class Presentacion extends Activity {
 
     //PARA EL CARRUSEL
     private ImageSwitcher imageSwitcher;
-
-    private List<Uri> gallery;
 
     private int position;
 
@@ -33,13 +26,15 @@ public class Presentacion extends Activity {
 
     private Timer timer = null;
 
+    private Carrusel carrusel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.presentacion);
 
-        gallery = (List<Uri>) getIntent().getSerializableExtra("CARRUSEL_SELECCIONADO");
+        carrusel = (Carrusel) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSEL);
         imageSwitcher = (ImageSwitcher) findViewById(R.id.carrusel_seleccionado_presentacion);
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 
@@ -66,14 +61,13 @@ public class Presentacion extends Activity {
     }
 
     public void start() {
-        if(gallery!=null) {
+        if(this.carrusel.getGaleria()!=null) {
             if (timer != null) {
                 timer.cancel();
             }
             position = 0;
             startSlider();
         }
-
     }
 
     public void startSlider() {
@@ -85,9 +79,9 @@ public class Presentacion extends Activity {
                 // "Only the original thread that created a view hierarchy can touch its views"
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        imageSwitcher.setImageURI(gallery.get(position));
+                        imageSwitcher.setImageURI(carrusel.getGaleria().get(position).getUri());
                         position++;
-                        if (position == gallery.size()) {
+                        if (position == carrusel.getGaleria().size()) {
                             position = 0;
                         }
                     }
@@ -103,9 +97,6 @@ public class Presentacion extends Activity {
         if (timer != null) {
             startSlider();
         }
-
     }
-
-
 
 }

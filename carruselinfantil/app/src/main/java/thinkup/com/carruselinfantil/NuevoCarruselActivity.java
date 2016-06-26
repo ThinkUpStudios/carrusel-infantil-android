@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import thinkup.com.carruselinfantil.modelo.Carrusel;
+import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -53,6 +56,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS = 100;
     private final int PHOTO_CODE = 200;
     private final int SELECT_PICTURE = 300;
+    private final int REQUEST_AUDIO = 1;
 
     //private ImageView mSetImage;
     private Button mOptionButton;
@@ -62,9 +66,10 @@ public class NuevoCarruselActivity extends AppCompatActivity {
 
     //PARA EL CARRUSEL
     private ImageSwitcher imageSwitcher;
-
-    private List<Uri> gallery;
     private ImageAdapter adapter;
+
+    private List<Carrusel> carruseles;
+    private Carrusel carrusel;
 
     private int position;
 
@@ -74,11 +79,20 @@ public class NuevoCarruselActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nuevo_carrusel);
-        this.gallery = new ArrayList<Uri>();
+
+        this.carruseles = (List<Carrusel>) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSELES);
+        Integer carruselAModificar = (Integer) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSEL_A_MODIFICAR);
+        if(carruselAModificar == null){
+            this.carrusel = new Carrusel();
+        }
+        else{
+            this.carrusel = this.carruseles.get(carruselAModificar);
+        }
 
         //mSetImage = (ImageView) findViewById(R.id.set_picture);
         mOptionButton = (Button) findViewById(R.id.show_options_button);
@@ -100,8 +114,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
         Seteando el adaptador al GridView
          */
         GridView gridview = (GridView) findViewById(R.id.gridview_imagenes);
-        this.adapter = new ImageAdapter(this, this.gallery)
-;
+        this.adapter = new ImageAdapter(this, this.carrusel);
         gridview.setAdapter(adapter);
 
         /*
@@ -112,14 +125,16 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                 /*
                 Iniciar una nueva actividad al presionar la foto
                  */
+
                 Intent i = new Intent(NuevoCarruselActivity.this,Details.class);
                 i.putExtra("position",position);//Posición del elemento
-                i.putExtra("CARRUSEL_SELECCIONADO", (Serializable) gallery);
-                startActivity(i);
+                i.putExtra(ConstantesAplicacion.CARRUSEL, carrusel);
+                startActivityForResult(i, REQUEST_AUDIO);
 
             }
         });
     }
+
 
     private boolean mayRequestStoragePermission() {
 
@@ -222,28 +237,34 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                                 }
                             });
 
-
-                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
-                    //mSetImage.setImageBitmap(bitmap);
-
-                    this.gallery.add(Uri.parse(mPath));
+                    ImagenConAudio iaudio = new ImagenConAudio();
+                    iaudio.setImage(mPath);
+                    this.carrusel.addImagen(iaudio);
                     this.adapter.notifyDataSetChanged();
-                    //this.adapter.addImage(Uri.parse(mPath));
                     break;
                 case SELECT_PICTURE:
                     ClipData clipData = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                         clipData = data.getClipData();
+                        String dataUri = data.getDataString();
                         for (int i = 0; i < clipData.getItemCount(); i++)
                         {
-                            this.gallery.add(clipData.getItemAt(i).getUri());
+                            ImagenConAudio ia = new ImagenConAudio();
+                            // TODO: 26/6/16 esto es un parche.
+                            String p = clipData.getItemAt(i).getUri().getPathSegments().get(2).substring(9);
+                            ia.setImage(p);
+
+                            this.carrusel.addImagen(ia);
                         }
                     }
                     this.adapter.notifyDataSetChanged();
-                    //this.adapter.addImage(data.getData());
-                    //mSetImage.setImageURI(path);
                     break;
+                case REQUEST_AUDIO:
+                    //TODO: Actualizar la lista.
+                    carrusel = (Carrusel) data.getSerializableExtra(ConstantesAplicacion.CARRUSEL);
+                    this.adapter.notifyDataSetChanged();
 
+                    break;
             }
         }
     }
@@ -291,8 +312,9 @@ public class NuevoCarruselActivity extends AppCompatActivity {
 
 
     public void guardar(View button) {
+        this.carruseles.add(carrusel);
         Intent i = new Intent(NuevoCarruselActivity.this, MisCarruselesActivity.class);
-        i.putExtra("CARRUSEL_SELECCIONADO", (Serializable) gallery);
+        i.putExtra(ConstantesAplicacion.CARRUSELES, (Serializable) carruseles);
         startActivity(i);
     }
 

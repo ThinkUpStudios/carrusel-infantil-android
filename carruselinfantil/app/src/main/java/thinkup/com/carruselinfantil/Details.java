@@ -18,18 +18,20 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import thinkup.com.carruselinfantil.modelo.Carrusel;
+import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
+
 
 public class Details extends AppCompatActivity implements MediaPlayer.OnCompletionListener{
 
     MediaRecorder recorder;
     MediaPlayer player;
     File archivo;
-    TextView estadoGrabacion;
     TextView reproduccion;
-    private String TEXTO_GRABANDO = "Grabando audio";
-    private String TEXTO_PAUSADO = "";
-
-
+    TextView audioEspañol;
+    Carrusel carrusel;
+    int position;
+    private boolean grabando = false;
 
 
     @Override
@@ -41,10 +43,9 @@ public class Details extends AppCompatActivity implements MediaPlayer.OnCompleti
         Recibiendo el identificador de la imagen
          */
         Intent i = getIntent();
-        int position = i.getIntExtra("position", -1);// -1 si no se encontró la referencia
-        List<Uri> gallery = (List<Uri>) getIntent().getSerializableExtra("CARRUSEL_SELECCIONADO");
-
-        ImageAdapter adapter = new ImageAdapter(this, gallery);
+        position = i.getIntExtra("position", -1);// -1 si no se encontró la referencia
+        carrusel = (Carrusel) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSEL);
+        ImageAdapter adapter = new ImageAdapter(this, carrusel);
 
         /*
         Seteando el recurso en el ImageView
@@ -53,14 +54,16 @@ public class Details extends AppCompatActivity implements MediaPlayer.OnCompleti
         originalImage.setImageURI(adapter.getThumbId(position));
 
 
-        this.estadoGrabacion = (TextView) findViewById(R.id.grabando);
-        this.estadoGrabacion.setText(this.TEXTO_PAUSADO);
 
         this.reproduccion = (TextView) findViewById(R.id.reproducion);
-        this.reproduccion.setText(this.TEXTO_PAUSADO);
+        this.reproduccion.setText("");
+
+        this.audioEspañol = (TextView) findViewById(R.id.audio_español);
+        this.audioEspañol.setText("Grabar audio en Español");
     }
 
     public void grabarAudio() {
+        this.grabando = true;
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -77,12 +80,11 @@ public class Details extends AppCompatActivity implements MediaPlayer.OnCompleti
         } catch (IOException e) {
         }
         recorder.start();
-        this.estadoGrabacion.setText("Grabando audio");
-
+        this.audioEspañol.setText("Grabando audio Español");
     }
 
     public void accionarAudio(View v) {
-        if(this.TEXTO_GRABANDO.equals(this.estadoGrabacion.getText())){
+        if(this.grabando){
             this.detener();
         }
         else{
@@ -93,15 +95,17 @@ public class Details extends AppCompatActivity implements MediaPlayer.OnCompleti
     public void detener() {
         recorder.stop();
         recorder.release();
-
-        this.estadoGrabacion.setText(this.TEXTO_PAUSADO);
+        ImagenConAudio imagenConAudio = this.carrusel.getGaleria().get(position);
+        imagenConAudio.addAudio(archivo.getAbsolutePath());
         this.reproduccion.setText("Listo para reproducir");
+        this.audioEspañol.setText("Grabar audio en Español");
+        this.grabando = false;
     }
 
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        this.estadoGrabacion.setText(this.TEXTO_PAUSADO);
+
     }
 
     public void reproducir(View v) {
@@ -116,5 +120,15 @@ public class Details extends AppCompatActivity implements MediaPlayer.OnCompleti
         } catch (IOException e) {
         }
         player.start();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent i = new Intent();
+        i.putExtra(ConstantesAplicacion.CARRUSEL, carrusel);
+        setResult(RESULT_OK, i);
+        finish();
+
     }
 }
