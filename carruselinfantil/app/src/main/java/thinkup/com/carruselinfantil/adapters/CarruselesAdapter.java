@@ -1,4 +1,4 @@
-package thinkup.com.carruselinfantil;
+package thinkup.com.carruselinfantil.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,22 +11,27 @@ import android.widget.ImageView;
 import java.util.List;
 
 import thinkup.com.carruselinfantil.modelo.Carrusel;
-import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
 
 
-public class ImageAdapter extends BaseAdapter {
+public class CarruselesAdapter extends BaseAdapter {
     // Contexto de la aplicación
     private Context mContext;
-    Carrusel gallery;
+    List<Carrusel> gallery;
 
 
-    public ImageAdapter(Context c, Carrusel galeria) {
+    public CarruselesAdapter(Context c, List<Carrusel> galeria) {
         mContext = c;
         this.gallery = galeria;
     }
 
+    public void setGallery(List<Carrusel> gallery) {
+        this.gallery = gallery;
+    }
+
     public int getCount() {
-        return this.gallery.getGaleria().size();
+        if(this.gallery != null)
+            return this.gallery.size();
+        return 0;
     }
 
     public Object getItem(int position) {
@@ -38,7 +43,9 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public Uri getThumbId(int position){
-        return this.gallery.getGaleria().get(position).getUri();
+        if(this.gallery != null)
+            return this.gallery.get(position).getGaleria().get(0).getUri();
+        return null;
     }
 
 

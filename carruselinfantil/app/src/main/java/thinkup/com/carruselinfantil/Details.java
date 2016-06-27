@@ -1,8 +1,6 @@
 package thinkup.com.carruselinfantil;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,8 +14,7 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.widget.TextView;
 
-import java.util.List;
-
+import thinkup.com.carruselinfantil.adapters.CarruselAdapter;
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
 
@@ -45,7 +42,7 @@ public class Details extends AppCompatActivity implements MediaPlayer.OnCompleti
         Intent i = getIntent();
         position = i.getIntExtra("position", -1);// -1 si no se encontró la referencia
         carrusel = (Carrusel) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSEL);
-        ImageAdapter adapter = new ImageAdapter(this, carrusel);
+        CarruselAdapter adapter = new CarruselAdapter(this, carrusel);
 
         /*
         Seteando el recurso en el ImageView

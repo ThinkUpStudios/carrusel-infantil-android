@@ -7,14 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -23,26 +20,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import thinkup.com.carruselinfantil.adapters.CarruselAdapter;
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
 
@@ -65,20 +53,10 @@ public class NuevoCarruselActivity extends AppCompatActivity {
 
     private String mPath;
 
-    //PARA EL CARRUSEL
-    private ImageSwitcher imageSwitcher;
-    private ImageAdapter adapter;
+    private CarruselAdapter adapter;
 
     private List<Carrusel> carruseles;
     private Carrusel carrusel;
-
-    private int position;
-
-    private static final Integer DURATION = 2500;
-
-    private Timer timer = null;
-
-
 
 
     @Override
@@ -115,7 +93,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
         Seteando el adaptador al GridView
          */
         GridView gridview = (GridView) findViewById(R.id.gridview_imagenes);
-        this.adapter = new ImageAdapter(this, this.carrusel);
+        this.adapter = new CarruselAdapter(this, this.carrusel);
         gridview.setAdapter(adapter);
 
         /*

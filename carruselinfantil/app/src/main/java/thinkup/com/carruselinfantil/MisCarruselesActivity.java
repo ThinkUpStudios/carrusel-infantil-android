@@ -5,22 +5,25 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import thinkup.com.carruselinfantil.adapters.CarruselAdapter;
+import thinkup.com.carruselinfantil.adapters.CarruselesAdapter;
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 
 public class MisCarruselesActivity extends DrawerAbstractActivity {
 
     private static final int REQUEST_CARRUSELES = 2;
+    private static final int REQUEST_PRESENTACION = 3;
 
     private List<Carrusel> carruseles;
-    ImageView carrusel;
-
+    private CarruselesAdapter adapter;
 
     TextView misCarruseles;
 
@@ -28,7 +31,9 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.carruseles = (List<Carrusel>) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSELES);
-
+        if(this.carruseles == null){
+            this.carruseles = new ArrayList<Carrusel>();
+        }
         misCarruseles = (TextView) findViewById(R.id.textoMisCarruseles);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nuevo_carrusel);
@@ -41,18 +46,27 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             }
         });
 
-        carrusel = (ImageView) findViewById(R.id.un_carrusel);
-        if(this.carruseles != null)
-            carrusel.setImageURI(this.carruseles.get(0).getGaleria().get(0).getUri());
-        else{
-            this.carruseles = new ArrayList<Carrusel>();
-        }
-        carrusel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MisCarruselesActivity.this, Presentacion.class);
-                i.putExtra(ConstantesAplicacion.CARRUSEL, (Serializable) carruseles.get(0));
-                startActivity(i);
+        /*
+        Seteando el adaptador al GridView
+         */
+        GridView gridview = (GridView) findViewById(R.id.gridview_mis_carruseles_imagenes);
+        this.adapter = new CarruselesAdapter(this, this.carruseles);
+        gridview.setAdapter(adapter);
+
+        /*
+        Creando una nueva escucha para los elementos del Grid
+         */
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                /*
+                Iniciar una nueva actividad al presionar la foto
+                 */
+                Carrusel carrusel = carruseles.get(position);
+                Intent i = new Intent(MisCarruselesActivity.this,Presentacion.class);
+                i.putExtra("position",position);//Posición del elemento
+                i.putExtra(ConstantesAplicacion.CARRUSEL, carrusel);
+                startActivityForResult(i, REQUEST_PRESENTACION);
+
             }
         });
     }
@@ -72,7 +86,8 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             switch (requestCode){
                 case REQUEST_CARRUSELES:
                     carruseles = (List<Carrusel>) data.getSerializableExtra(ConstantesAplicacion.CARRUSELES);
-                    carrusel.setImageURI(this.carruseles.get(0).getGaleria().get(0).getUri());
+                    this.adapter.setGallery(carruseles);
+                    this.adapter.notifyDataSetChanged();
                     break;
             }
         }

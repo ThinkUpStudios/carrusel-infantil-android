@@ -1,7 +1,11 @@
 package thinkup.com.carruselinfantil;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -10,21 +14,24 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 
-public class Presentacion extends Activity {
+public class Presentacion extends Activity implements MediaPlayer.OnCompletionListener{
 
     //PARA EL CARRUSEL
     private ImageSwitcher imageSwitcher;
 
     private int position;
 
-    private static final Integer DURATION = 2500;
+    private static final Integer DURATION = 5000;
 
     private Timer timer = null;
+    private MediaPlayer player;
 
     private Carrusel carrusel;
 
@@ -80,16 +87,35 @@ public class Presentacion extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         imageSwitcher.setImageURI(carrusel.getGaleria().get(position).getUri());
+
+                        if(carrusel.getGaleria().get(position).getAudios().get(0) != null) {
+                            try {
+                                player = new MediaPlayer();
+                                player.setOnCompletionListener(Presentacion.this);
+                                player.setDataSource(carrusel.getGaleria().get(position).getAudios().get(0) );
+                            } catch (IOException e) {
+                            }
+                            try {
+                                player.prepare();
+                            } catch (IOException e) {
+                            }
+                            player.start();
+
+
+                        }
+
                         position++;
                         if (position == carrusel.getGaleria().size()) {
                             position = 0;
                         }
                     }
+
                 });
             }
 
         }, 0, DURATION);
     }
+
 
     @Override
     protected void onResume() {
@@ -97,6 +123,36 @@ public class Presentacion extends Activity {
         if (timer != null) {
             startSlider();
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        player.stop();
+        player.reset();
+
+        finish();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        player.stop();
+        player.reset();
+    }
+
+    public void stop() {
+        if (timer != null) {
+            player.stop();
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        stop();
+        super.onDestroy();
+
     }
 
 }
