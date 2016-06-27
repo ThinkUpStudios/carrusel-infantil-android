@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -250,8 +251,8 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                         for (int i = 0; i < clipData.getItemCount(); i++)
                         {
                             ImagenConAudio ia = new ImagenConAudio();
-                            // TODO: 26/6/16 esto es un parche.
-                            String p = clipData.getItemAt(i).getUri().getPathSegments().get(2).substring(9);
+                            Uri selectedImageUri = clipData.getItemAt(i).getUri();
+                            String p = getRealPathFromURI(selectedImageUri);
                             ia.setImage(p);
 
                             this.carrusel.addImagen(ia);
@@ -267,6 +268,16 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
     @Override
@@ -309,13 +320,15 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     }
 
 
-
-
-    public void guardar(View button) {
+    @Override
+    public void onBackPressed()
+    {
+        Intent i = new Intent();
         this.carruseles.add(carrusel);
-        Intent i = new Intent(NuevoCarruselActivity.this, MisCarruselesActivity.class);
         i.putExtra(ConstantesAplicacion.CARRUSELES, (Serializable) carruseles);
-        startActivity(i);
+        setResult(RESULT_OK, i);
+        finish();
+
     }
 
 }

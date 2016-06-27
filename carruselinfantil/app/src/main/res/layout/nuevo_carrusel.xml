@@ -12,13 +12,4 @@
 
     <include layout="@layout/nuevo_carrusel_contenido" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_guardar_carrusel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/sym_call_incoming"
-        android:onClick="guardar"/>
-
 </android.support.design.widget.CoordinatorLayout>

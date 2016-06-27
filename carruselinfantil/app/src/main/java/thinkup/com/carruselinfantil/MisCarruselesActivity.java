@@ -19,6 +19,7 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
     private static final int REQUEST_CARRUSELES = 2;
 
     private List<Carrusel> carruseles;
+    ImageView carrusel;
 
 
     TextView misCarruseles;
@@ -36,11 +37,11 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MisCarruselesActivity.this, NuevoCarruselActivity.class);
                 i.putExtra(ConstantesAplicacion.CARRUSELES, (Serializable) carruseles);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_CARRUSELES);
             }
         });
 
-        ImageView carrusel = (ImageView) findViewById(R.id.un_carrusel);
+        carrusel = (ImageView) findViewById(R.id.un_carrusel);
         if(this.carruseles != null)
             carrusel.setImageURI(this.carruseles.get(0).getGaleria().get(0).getUri());
         else{
@@ -50,7 +51,7 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MisCarruselesActivity.this, Presentacion.class);
-                i.putExtra(ConstantesAplicacion.CARRUSEL, (Serializable) carruseles.get(0).getGaleria());
+                i.putExtra(ConstantesAplicacion.CARRUSEL, (Serializable) carruseles.get(0));
                 startActivity(i);
             }
         });
@@ -71,6 +72,7 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             switch (requestCode){
                 case REQUEST_CARRUSELES:
                     carruseles = (List<Carrusel>) data.getSerializableExtra(ConstantesAplicacion.CARRUSELES);
+                    carrusel.setImageURI(this.carruseles.get(0).getGaleria().get(0).getUri());
                     break;
             }
         }
