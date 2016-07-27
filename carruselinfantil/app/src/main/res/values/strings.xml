@@ -19,5 +19,9 @@
     <string name="title_activity_presentacion">PresentacionActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="background">background</string>
+    <string name="mis_Carruseles">Mis Carruseles</string>
+    <string name="tuto_nuevo_carrusel">Haz click en el \"+\" para crear un nuevo carrusel</string>
+    <string name="tutorial_nueva_imagen">Haz click en el \"+\" para agregar una imagen</string>
 
 </resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:clickable="true">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="5dp"
+        android:clickable="false">
+
+        <ImageView
+            android:contentDescription="@string/background"
+            android:id="@+id/item_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/test_carrusel_back"
+            android:scaleType="centerCrop"
+            android:clickable="false" />
+
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:background="@color/colorAccent"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            android:text="Ejemplo de Nombre de Carrusel"
+            android:textAlignment="viewEnd"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="normal|bold"
+            android:paddingTop="10dp"
+            android:alpha="0.9"
+            android:clickable="false" />
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

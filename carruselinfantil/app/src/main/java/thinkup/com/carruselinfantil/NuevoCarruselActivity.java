@@ -15,13 +15,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -48,7 +48,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     private final int REQUEST_AUDIO = 1;
 
     //private ImageView mSetImage;
-    private Button mOptionButton;
+    private FloatingActionButton mOptionButton;
     private RelativeLayout mRlView;
 
     private String mPath;
@@ -63,7 +63,6 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nuevo_carrusel);
-
         this.carruseles = (List<Carrusel>) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSELES);
         Integer carruselAModificar = (Integer) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSEL_A_MODIFICAR);
         if(carruselAModificar == null){
@@ -73,8 +72,24 @@ public class NuevoCarruselActivity extends AppCompatActivity {
             this.carrusel = this.carruseles.get(carruselAModificar);
         }
 
+        updateTutorial();
+
+        GridView gridview = (GridView) findViewById(R.id.grid_carrusel);
+        this.adapter = new CarruselAdapter(this, this.carrusel);
+        this.adapter.setListener(new CarruselAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Integer position) {
+                Intent i = new Intent(NuevoCarruselActivity.this,Details.class);
+                i.putExtra("position",position);//Posición del elemento
+                i.putExtra(ConstantesAplicacion.CARRUSEL, carrusel);
+                startActivityForResult(i, REQUEST_AUDIO);
+            }
+        });
+        gridview.setAdapter(adapter);
+
+
         //mSetImage = (ImageView) findViewById(R.id.set_picture);
-        mOptionButton = (Button) findViewById(R.id.show_options_button);
+        mOptionButton = (FloatingActionButton) findViewById(R.id.fab_add);
 
         if(mayRequestStoragePermission())
             mOptionButton.setEnabled(true);
@@ -92,26 +107,21 @@ public class NuevoCarruselActivity extends AppCompatActivity {
         /*
         Seteando el adaptador al GridView
          */
-        GridView gridview = (GridView) findViewById(R.id.gridview_imagenes);
-        this.adapter = new CarruselAdapter(this, this.carrusel);
-        gridview.setAdapter(adapter);
 
-        /*
-        Creando una nueva escucha para los elementos del Grid
-         */
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                /*
-                Iniciar una nueva actividad al presionar la foto
-                 */
+    }
 
-                Intent i = new Intent(NuevoCarruselActivity.this,Details.class);
-                i.putExtra("position",position);//Posición del elemento
-                i.putExtra(ConstantesAplicacion.CARRUSEL, carrusel);
-                startActivityForResult(i, REQUEST_AUDIO);
 
-            }
-        });
+    private void updateTutorial() {
+        View tutorial = findViewById(R.id.tutorial);
+        GridView gridview = (GridView) findViewById(R.id.grid_carrusel);
+
+        if (this.carrusel.getGaleria().size() <= 0) {
+            tutorial.setVisibility(View.VISIBLE);
+            gridview.setVisibility(View.GONE);
+        } else {
+            tutorial.setVisibility(View.GONE);
+            gridview.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -143,7 +153,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     private void showOptions() {
         final CharSequence[] option = {"Tomar foto", "Elegir de galeria", "Cancelar"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(NuevoCarruselActivity.this);
-        builder.setTitle("Eleige una opción");
+        builder.setTitle("Elige una opción");
         builder.setItems(option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -152,8 +162,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
                 }else if(option[which] == "Elegir de galeria"){
                     Intent chooseIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     chooseIntent.setType("image/*");
-                    chooseIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    startActivityForResult(chooseIntent.createChooser(chooseIntent, "Selecciona app de imagen"), SELECT_PICTURE);
+                    startActivityForResult(Intent.createChooser(chooseIntent, "Selecciona app de imagen"), SELECT_PICTURE);
                 }else {
                     dialog.dismiss();
                 }
@@ -245,6 +254,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
 
                     break;
             }
+            updateTutorial();
         }
     }
 

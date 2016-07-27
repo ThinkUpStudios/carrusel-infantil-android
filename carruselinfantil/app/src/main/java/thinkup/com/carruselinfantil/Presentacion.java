@@ -3,9 +3,7 @@ package thinkup.com.carruselinfantil;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -15,13 +13,12 @@ import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 
-public class Presentacion extends Activity implements MediaPlayer.OnCompletionListener{
+public class Presentacion extends Activity implements MediaPlayer.OnCompletionListener {
 
     //PARA EL CARRUSEL
     private ImageSwitcher imageSwitcher;
@@ -67,8 +64,8 @@ public class Presentacion extends Activity implements MediaPlayer.OnCompletionLi
 
     }
 
-    public void start() {
-        if(this.carrusel.getGaleria()!=null) {
+    private void start() {
+        if (this.carrusel.getGaleria() != null) {
             if (timer != null) {
                 timer.cancel();
             }
@@ -77,7 +74,7 @@ public class Presentacion extends Activity implements MediaPlayer.OnCompletionLi
         }
     }
 
-    public void startSlider() {
+    private void startSlider() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
 
@@ -88,11 +85,11 @@ public class Presentacion extends Activity implements MediaPlayer.OnCompletionLi
                     public void run() {
                         imageSwitcher.setImageURI(carrusel.getGaleria().get(position).getUri());
 
-                        if(carrusel.getGaleria().get(position).getAudios().get(0) != null) {
+                        if (carrusel.getGaleria().size() > 0 && carrusel.getGaleria().get(position).getAudios().size() > 0) {
                             try {
                                 player = new MediaPlayer();
                                 player.setOnCompletionListener(Presentacion.this);
-                                player.setDataSource(carrusel.getGaleria().get(position).getAudios().get(0) );
+                                player.setDataSource(carrusel.getGaleria().get(position).getAudios().get(0));
                             } catch (IOException e) {
                             }
                             try {
@@ -126,22 +123,26 @@ public class Presentacion extends Activity implements MediaPlayer.OnCompletionLi
     }
 
     @Override
-    public void onBackPressed()
-    {
-        player.stop();
-        player.reset();
-
+    public void onBackPressed() {
+        if(player!= null){
+            player.stop();
+           player.reset();
+        }
+        Intent i = new Intent(this, MisCarruselesActivity.class);
+        startActivity(i);
         finish();
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        player.stop();
-        player.reset();
+        if(player!=null) {
+            player.stop();
+            player.reset();
+        }
     }
 
-    public void stop() {
-        if (timer != null) {
+    private void stop() {
+        if (timer != null && player!=null) {
             player.stop();
             timer.cancel();
             timer = null;
@@ -150,6 +151,7 @@ public class Presentacion extends Activity implements MediaPlayer.OnCompletionLi
 
     @Override
     public void onDestroy() {
+
         stop();
         super.onDestroy();
 

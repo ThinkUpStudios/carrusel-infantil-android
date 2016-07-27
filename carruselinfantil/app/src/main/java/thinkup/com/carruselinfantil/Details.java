@@ -48,7 +48,7 @@ public class Details extends AppCompatActivity implements MediaPlayer.OnCompleti
         Seteando el recurso en el ImageView
          */
         ImageView originalImage = (ImageView)findViewById(R.id.originalImage);
-        originalImage.setImageURI(adapter.getThumbId(position));
+        //originalImage.setImageURI();
 
 
 

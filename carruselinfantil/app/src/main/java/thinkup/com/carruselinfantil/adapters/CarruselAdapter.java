@@ -2,14 +2,13 @@ package thinkup.com.carruselinfantil.adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
-import java.util.List;
-
+import thinkup.com.carruselinfantil.R;
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
 
@@ -18,6 +17,8 @@ public class CarruselAdapter extends BaseAdapter {
     // Contexto de la aplicación
     private Context mContext;
     Carrusel gallery;
+    private OnItemClickListener listener;
+    static Integer VIEW_HOLDER = 1909;
 
 
     public CarruselAdapter(Context c, Carrusel galeria) {
@@ -43,25 +44,73 @@ public class CarruselAdapter extends BaseAdapter {
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        //ImageView a retornar
-        ImageView imageView;
-
+        View r;
+        CarruselAdapter.ViewHolder vh;
         if (convertView == null) {
             /*
             Crear un nuevo Image View de 90x90
             y con recorte alrededor del centro
              */
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(90,90));
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.image_display, parent, false);
+            vh = new CarruselAdapter.ViewHolder(rowView, listener);
+            rowView.setTag(vh);
+            vh.bind(position);
+            convertView = rowView;
         } else {
-            imageView = (ImageView) convertView;
+            vh =(CarruselAdapter.ViewHolder) convertView.getTag();
         }
 
-        //Setear la imagen desde el recurso drawable
-        imageView.setImageURI(this.getThumbId(position));
-        return imageView;
+        vh.content.setImageURI(this.getThumbId(position));
+        if(this.gallery.getGaleria().get(position).getAudios().size() <=0){
+            vh.recorded.setImageResource(android.R.drawable.presence_audio_busy);
+        }else{
+            vh.recorded.setImageResource(android.R.drawable.presence_audio_online);
+        }
+        return convertView;
     }
 
+    public OnItemClickListener getListener() {
+        return listener;
+    }
 
+    public void setListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface  OnItemClickListener{
+        void onItemClick(Integer position);
+    }
+    public static class ViewHolder{
+        // each data item is just a string in this case
+        public ImageView content;
+        public ImageView recorded;
+        public View parent;
+        public OnItemClickListener listener;
+        public ViewHolder(View v, OnItemClickListener listener) {
+            parent = v;
+            this.listener = listener;
+            content = (ImageView) v.findViewById(R.id.image_content);
+            recorded = (ImageView) v.findViewById(R.id.recorded);
+
+        }
+
+        public OnItemClickListener getListener() {
+            return listener;
+        }
+
+        public void setListener(OnItemClickListener listener) {
+            this.listener = listener;
+        }
+
+        public void bind(final Integer position) {
+
+            parent.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(position);
+                }
+            });
+        }
+
+    }
 }

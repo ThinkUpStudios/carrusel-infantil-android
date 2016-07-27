@@ -14,6 +14,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"></ImageSwitcher>
+        android:layout_alignParentLeft="true"/>
 
 </RelativeLayout>
