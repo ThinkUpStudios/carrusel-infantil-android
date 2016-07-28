@@ -15,6 +15,7 @@
     <string name="terminar">Terminar</string>
     <string name="guardar">GUARDAR</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="default_nombre">Nuevo Carrusel</string>
 
     <string name="title_activity_presentacion">PresentacionActivity</string>
     <string name="dummy_button">Dummy Button</string>

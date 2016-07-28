@@ -71,6 +71,15 @@ public class MisCarruselesActivity extends DrawerAbstractActivity {
             }
 
         });
+        adapter.setEditListener(new CarruselesAdapter.OnEditItem() {
+            @Override
+            public void onEdit(Integer c) {
+                Intent i = new Intent(MisCarruselesActivity.this, NuevoCarruselActivity.class);
+                i.putExtra(ConstantesAplicacion.CARRUSEL_A_MODIFICAR,c);
+                i.putExtra(ConstantesAplicacion.CARRUSELES, (Serializable) carruseles);
+                startActivityForResult(i, REQUEST_CARRUSELES);
+            }
+        });
     }
 
     private void updateTutorial() {

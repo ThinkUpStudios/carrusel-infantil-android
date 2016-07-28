@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+
 import thinkup.com.carruselinfantil.R;
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 import thinkup.com.carruselinfantil.modelo.ImagenConAudio;
@@ -61,7 +65,7 @@ public class CarruselAdapter extends BaseAdapter {
             vh =(CarruselAdapter.ViewHolder) convertView.getTag();
         }
 
-        vh.content.setImageURI(this.getThumbId(position));
+        Picasso.with(mContext).load(new File(this.getThumbId(position).getPath())).into(vh.content);
         if(this.gallery.getGaleria().get(position).getAudios().size() <=0){
             vh.recorded.setImageResource(android.R.drawable.presence_audio_busy);
         }else{

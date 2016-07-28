@@ -10,13 +10,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import thinkup.com.carruselinfantil.R;
 import thinkup.com.carruselinfantil.modelo.Carrusel;
 
 
-public class CarruselesAdapter extends RecyclerView.Adapter<CarruselesAdapter.ViewHolder>  {
+public class CarruselesAdapter extends RecyclerView.Adapter<CarruselesAdapter.ViewHolder> {
     // Contexto de la aplicación
     private Context mContext;
 
@@ -26,30 +27,46 @@ public class CarruselesAdapter extends RecyclerView.Adapter<CarruselesAdapter.Vi
 
     public interface OnItemClick {
 
-        public void onItemClick(Carrusel c);
+        void onItemClick(Carrusel c);
+    }
+
+    public interface OnEditItem {
+        void onEdit(Integer c);
     }
 
     private OnItemClick listener;
+    private OnEditItem editListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView mTextView;
         public ImageView mBackground;
+
         public ViewHolder(View v) {
             super(v);
             mTextView = (TextView) v.findViewById(R.id.info_text);
             mBackground = (ImageView) v.findViewById(R.id.item_image);
 
         }
+
         public void bind(final Carrusel item, final OnItemClick listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(item);
                 }
             });
         }
 
+        public void bindEditor(final Integer position, final OnEditItem editListener) {
+            itemView.findViewById(R.id.edit_carrusel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editListener.onEdit(position);
+                }
+            });
+        }
     }
 
 
@@ -75,6 +92,14 @@ public class CarruselesAdapter extends RecyclerView.Adapter<CarruselesAdapter.Vi
         this.gallery = gallery;
     }
 
+    public OnEditItem getEditListener() {
+        return editListener;
+    }
+
+    public void setEditListener(OnEditItem editListener) {
+        this.editListener = editListener;
+    }
+
     public int getCount() {
         if (this.gallery != null)
             return this.gallery.size();
@@ -90,7 +115,9 @@ public class CarruselesAdapter extends RecyclerView.Adapter<CarruselesAdapter.Vi
 
         holder.mTextView.setText(c.getNombre());
         holder.bind(gallery.get(position), listener);
-        holder.mBackground.setImageURI(c.getGaleria().get(0).getUri());
+        holder.bindEditor(position, editListener);
+        Picasso.with(mContext).load(new File(c.getGaleria().get(0).getUri().getPath())).into(holder.mBackground);
+
 
     }
 

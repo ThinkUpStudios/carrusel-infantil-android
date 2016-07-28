@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -56,6 +57,7 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     private CarruselAdapter adapter;
 
     private List<Carrusel> carruseles;
+    private boolean editando;
     private Carrusel carrusel;
 
 
@@ -65,16 +67,22 @@ public class NuevoCarruselActivity extends AppCompatActivity {
         setContentView(R.layout.nuevo_carrusel);
         this.carruseles = (List<Carrusel>) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSELES);
         Integer carruselAModificar = (Integer) getIntent().getSerializableExtra(ConstantesAplicacion.CARRUSEL_A_MODIFICAR);
+        TextInputEditText nombre = (TextInputEditText)findViewById(R.id.nombre_carrusel);
         if(carruselAModificar == null){
             this.carrusel = new Carrusel();
+            this.carrusel.setNombre(getString(R.string.default_nombre));
+            editando = false;
         }
         else{
             this.carrusel = this.carruseles.get(carruselAModificar);
-        }
+            editando = true;
 
+        }
+        nombre.setText(carrusel.getNombre());
         updateTutorial();
 
         GridView gridview = (GridView) findViewById(R.id.grid_carrusel);
+
         this.adapter = new CarruselAdapter(this, this.carrusel);
         this.adapter.setListener(new CarruselAdapter.OnItemClickListener() {
             @Override
@@ -312,11 +320,20 @@ public class NuevoCarruselActivity extends AppCompatActivity {
     public void onBackPressed()
     {
         Intent i = new Intent();
-        this.carruseles.add(carrusel);
-        i.putExtra(ConstantesAplicacion.CARRUSELES, (Serializable) carruseles);
-        setResult(RESULT_OK, i);
-        finish();
+        TextInputEditText nombre = (TextInputEditText)findViewById(R.id.nombre_carrusel);
+        if(!existeCarrusel(nombre.getText().toString())){
+            carrusel.setNombre(nombre.getText().toString());
+            if(!editando) this.carruseles.add(carrusel);
+            i.putExtra(ConstantesAplicacion.CARRUSELES, (Serializable) carruseles);
+            setResult(RESULT_OK, i);
+            finish();
+        }
 
+
+    }
+
+    private boolean existeCarrusel(String nombre) {
+        return false;
     }
 
 }

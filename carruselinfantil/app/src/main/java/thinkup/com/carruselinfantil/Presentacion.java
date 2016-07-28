@@ -44,7 +44,7 @@ public class Presentacion extends Activity implements MediaPlayer.OnCompletionLi
 
             public View makeView() {
                 ImageView imageView = new ImageView(Presentacion.this);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
                 ViewGroup.LayoutParams params = new ImageSwitcher.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
